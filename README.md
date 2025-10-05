@@ -1,3 +1,8 @@
+Steps: 
+1. install counter app https://sdk.mystenlabs.com/dapp-kit/create-dapp (deploy and test example)
+2. 
+
+
 # Sui dApp Starter Template
 
 This dApp was created using `@mysten/create-dapp` that sets up a basic React
