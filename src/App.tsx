@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Journal } from "./Journal";
 import { CreateJournal } from "./CreateJournal";
 import { JournalList } from "./JournalList";
+import { JournalGallery } from "./JournalGallery";
 
 function App() {
   const currentAccount = useCurrentAccount();
@@ -12,7 +13,6 @@ function App() {
     const hash = window.location.hash.slice(1);
     return isValidSuiObjectId(hash) ? hash : null;
   });
-  const [creatingNew, setCreatingNew] = useState(false);
 
   return (
     <>
@@ -49,22 +49,27 @@ function App() {
                   setJournal(null);
                 }}
               />
-            ) : creatingNew ? (
-              <CreateJournal
-                onCreated={(id) => {
-                  window.location.hash = id;
-                  setJournal(id);
-                  setCreatingNew(false);
-                }}
-              />
             ) : (
-              <JournalList
-                onSelectJournal={(id) => {
-                  window.location.hash = id;
-                  setJournal(id);
-                }}
-                onCreateNew={() => setCreatingNew(true)}
-              />
+              <Flex direction="column" gap="6">
+                <CreateJournal
+                  onCreated={(id) => {
+                    window.location.hash = id;
+                    setJournal(id);
+                  }}
+                />
+                <JournalList
+                  onSelectJournal={(id) => {
+                    window.location.hash = id;
+                    setJournal(id);
+                  }}
+                />
+                <JournalGallery
+                  onSelectJournal={(id) => {
+                    window.location.hash = id;
+                    setJournal(id);
+                  }}
+                />
+              </Flex>
             )
           ) : (
             <Heading>Please connect your wallet</Heading>
