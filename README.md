@@ -2,6 +2,7 @@ Steps:
 1. install counter app https://sdk.mystenlabs.com/dapp-kit/create-dapp (deploy and test example)
 2. `sui move new journal` + write journal contracts + deploy
 3. Update frontend: create journal + write entries
+4. add owned journals list
 
 
 # Sui dApp Starter Template

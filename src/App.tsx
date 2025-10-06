@@ -4,6 +4,7 @@ import { Box, Container, Flex, Heading } from "@radix-ui/themes";
 import { useState } from "react";
 import { Journal } from "./Journal";
 import { CreateJournal } from "./CreateJournal";
+import { JournalList } from "./JournalList";
 
 function App() {
   const currentAccount = useCurrentAccount();
@@ -11,6 +12,7 @@ function App() {
     const hash = window.location.hash.slice(1);
     return isValidSuiObjectId(hash) ? hash : null;
   });
+  const [creatingNew, setCreatingNew] = useState(false);
 
   return (
     <>
@@ -40,13 +42,28 @@ function App() {
         >
           {currentAccount ? (
             journalId ? (
-              <Journal id={journalId} />
-            ) : (
+              <Journal
+                id={journalId}
+                onBack={() => {
+                  window.location.hash = "";
+                  setJournal(null);
+                }}
+              />
+            ) : creatingNew ? (
               <CreateJournal
                 onCreated={(id) => {
                   window.location.hash = id;
                   setJournal(id);
+                  setCreatingNew(false);
                 }}
+              />
+            ) : (
+              <JournalList
+                onSelectJournal={(id) => {
+                  window.location.hash = id;
+                  setJournal(id);
+                }}
+                onCreateNew={() => setCreatingNew(true)}
               />
             )
           ) : (

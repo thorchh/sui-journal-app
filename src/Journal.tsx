@@ -13,7 +13,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 
 const SUI_CLOCK_OBJECT_ID = "0x6";
 
-export function Journal({ id }: { id: string }) {
+export function Journal({ id, onBack }: { id: string; onBack: () => void }) {
   const journalPackageId = useNetworkVariable("journalPackageId");
   const suiClient = useSuiClient();
   const currentAccount = useCurrentAccount();
@@ -79,7 +79,12 @@ export function Journal({ id }: { id: string }) {
 
   return (
     <>
-      <Heading size="3">{journalFields?.title || "Journal"}</Heading>
+      <Flex justify="between" align="center" mb="3">
+        <Heading size="3">{journalFields?.title || "Journal"}</Heading>
+        <Button variant="soft" onClick={onBack}>
+          Back to Journals
+        </Button>
+      </Flex>
 
       <Flex direction="column" gap="4" mt="4">
         {/* Past Entries */}
