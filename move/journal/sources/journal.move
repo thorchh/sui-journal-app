@@ -6,6 +6,7 @@ module journal::journal {
   public struct Journal has key {
     id: UID, 
     owner: address, 
+    title: String,
     entries: vector<Entry>
   }
 
@@ -14,11 +15,12 @@ module journal::journal {
     create_at_ms: u64
   }
 
-  public fun new_journal(ctx: &mut TxContext) {
+  public fun new_journal(title: String, ctx: &mut TxContext) {
     transfer::share_object(Journal {
       id: object::new(ctx),
       owner: ctx.sender(),
-      entries: vector::empty<Entry>()
+      entries: vector::empty<Entry>(),
+      title
     });
   }
 
