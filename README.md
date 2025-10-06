@@ -3,6 +3,7 @@ Steps:
 2. `sui move new journal` + write journal contracts + deploy
 3. Update frontend: create journal + write entries
 4. add owned journals list
+5. add global gallery using graphql rpc
 
 
 # Sui dApp Starter Template
