@@ -3,7 +3,7 @@ module journal::journal {
   use std::string::String;
   use sui::clock::Clock;
 
-  public struct Journal has key {
+  public struct Journal has key, store {
     id: UID, 
     owner: address, 
     title: String,
@@ -15,13 +15,13 @@ module journal::journal {
     create_at_ms: u64
   }
 
-  public fun new_journal(title: String, ctx: &mut TxContext) {
-    transfer::share_object(Journal {
+  public fun new_journal(title: String, ctx: &mut TxContext): Journal {
+    Journal {
       id: object::new(ctx),
       owner: ctx.sender(),
       entries: vector::empty<Entry>(),
       title
-    });
+    }
   }
 
   public fun add_entry(journal: &mut Journal, content: String, clock: &Clock, ctx: &TxContext) {

@@ -1,6 +1,6 @@
 import { Transaction } from "@mysten/sui/transactions";
 import { Button, Container, TextField } from "@radix-ui/themes";
-import { useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
+import { useSignAndExecuteTransaction, useSuiClient, useCurrentAccount } from "@mysten/dapp-kit";
 import { useNetworkVariable } from "./networkConfig";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useState } from "react";
@@ -12,6 +12,7 @@ export function CreateJournal({
 }) {
   const journalPackageId = useNetworkVariable("journalPackageId");
   const suiClient = useSuiClient();
+  const currentAccount = useCurrentAccount();
   const [title, setTitle] = useState("");
   const {
     mutate: signAndExecute,
@@ -20,12 +21,16 @@ export function CreateJournal({
   } = useSignAndExecuteTransaction();
 
   function create() {
+    if (!currentAccount) return;
+
     const tx = new Transaction();
 
-    tx.moveCall({
+    const [journal] = tx.moveCall({
       arguments: [tx.pure.string(title)],
       target: `${journalPackageId}::journal::new_journal`,
     });
+
+    tx.transferObjects([journal], currentAccount.address);
 
     signAndExecute(
       {
