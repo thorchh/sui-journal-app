@@ -1,16 +1,18 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { Button, Container } from "@radix-ui/themes";
+import { Button, Container, TextField } from "@radix-ui/themes";
 import { useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
 import { useNetworkVariable } from "./networkConfig";
 import ClipLoader from "react-spinners/ClipLoader";
+import { useState } from "react";
 
-export function CreateCounter({
+export function CreateJournal({
   onCreated,
 }: {
   onCreated: (id: string) => void;
 }) {
-  const counterPackageId = useNetworkVariable("counterPackageId");
+  const journalPackageId = useNetworkVariable("journalPackageId");
   const suiClient = useSuiClient();
+  const [title, setTitle] = useState("");
   const {
     mutate: signAndExecute,
     isSuccess,
@@ -21,8 +23,8 @@ export function CreateCounter({
     const tx = new Transaction();
 
     tx.moveCall({
-      arguments: [],
-      target: `${counterPackageId}::counter::create`,
+      arguments: [tx.pure.string(title)],
+      target: `${journalPackageId}::journal::new_journal`,
     });
 
     signAndExecute(
@@ -46,14 +48,21 @@ export function CreateCounter({
 
   return (
     <Container>
+      <TextField.Root
+        placeholder="Enter journal title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        size="3"
+        mb="3"
+      />
       <Button
         size="3"
         onClick={() => {
           create();
         }}
-        disabled={isSuccess || isPending}
+        disabled={isSuccess || isPending || !title.trim()}
       >
-        {isSuccess || isPending ? <ClipLoader size={20} /> : "Create Counter"}
+        {isSuccess || isPending ? <ClipLoader size={20} /> : "Create Journal"}
       </Button>
     </Container>
   );
