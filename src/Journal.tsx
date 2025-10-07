@@ -11,8 +11,6 @@ import { useNetworkVariable } from "./networkConfig";
 import { useEffect, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 
-const SUI_CLOCK_OBJECT_ID = "0x6";
-
 export function Journal({ id, onBack }: { id: string; onBack: () => void }) {
   const journalPackageId = useNetworkVariable("journalPackageId");
   const suiClient = useSuiClient();
@@ -44,7 +42,7 @@ export function Journal({ id, onBack }: { id: string; onBack: () => void }) {
       arguments: [
         tx.object(id),
         tx.pure.string(newEntryContent),
-        tx.object(SUI_CLOCK_OBJECT_ID),
+        tx.object.clock(),
       ],
       target: `${journalPackageId}::journal::add_entry`,
     });
