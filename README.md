@@ -10,6 +10,53 @@ Follow the [counter template README instructions](https://github.com/MystenLabs/
 
 **Key concepts:** Shared objects, Move functions, transaction building.
 
+### Optional: Enhanced User Experience
+
+**Goal:** Add Slush web wallet support and easy faucet access for a better development experience.
+
+These optional features remove the need for browser extension wallets and simplify obtaining testnet SUI coins.
+
+#### Add Slush Wallet Support
+
+The Slush wallet enables users to sign in with Google authentication, eliminating the need for browser wallet extensions.
+
+Update [src/main.tsx](src/main.tsx) to add the `slushWallet` prop to `WalletProvider`:
+
+```tsx
+<WalletProvider autoConnect slushWallet={{ name: "Journal App" }}>
+  <App />
+</WalletProvider>
+```
+
+#### Add Faucet Button
+
+Add a convenient button for users to obtain testnet SUI directly from the UI.
+
+Update [src/App.tsx](src/App.tsx) to add a faucet button in the header:
+
+```tsx
+<Box>
+  <Flex gap="2" align="center">
+    {currentAccount && (
+      <Button
+        variant="soft"
+        onClick={() => {
+          window.open(`https://faucet.sui.io/?address=${currentAccount.address}`, '_blank');
+        }}
+      >
+        Get Testnet SUI
+      </Button>
+    )}
+    <ConnectButton />
+  </Flex>
+</Box>
+```
+
+**Benefits:**
+- Users can sign in with Google instead of installing wallet extensions
+- One-click access to testnet faucet with address pre-filled
+- Smoother onboarding for new users
+
 ---
 
 ## Step 1: Create Journal Smart Contract
