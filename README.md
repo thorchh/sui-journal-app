@@ -24,9 +24,33 @@ Before starting this workshop, make sure you have:
 - **Basic TypeScript/React knowledge** - Familiarity with React components and hooks
 - **A code editor** - VS Code or your preferred editor
 
+**Need help with installation?** Join our [Discord community](https://discord.gg/K79FVNcw55) for support!
+
+### Verify Your Setup
+
+Before proceeding, verify that all required tools are installed:
+
+```bash
+# Check Sui CLI is installed
+sui --version
+# Should output something like: sui 1.58.x
+
+# Check Node.js is installed (v18+ recommended)
+node --version
+# Should output something like: v18.x.x or higher
+
+# Check pnpm is installed
+pnpm --version
+# Should output something like: 8.x.x or 9.x.x
+```
+
+If any of these commands fail, please install the missing tools before continuing.
+
 ## Getting Started
 
-Fork this repository and clone it to your local machine:
+Fork this repository and clone it to your local machine.
+
+**Questions or stuck?** Join our [Discord community](https://discord.gg/K79FVNcw55) for help!
 
 ## Step 0: Counter Example
 
@@ -133,19 +157,31 @@ Now that you've practiced deploying contracts and interacting with shared object
 
 ### Create Journal Package
 
+First, create a new Move package for the journal smart contract:
+
 ```bash
 cd move
 sui move new journal
 ```
 
+This command creates a new directory structure:
+```
+move/journal/
+├── Move.toml          # Package manifest (dependencies, addresses)
+└── sources/           # Your Move source code goes here
+    └── (empty)
+```
+
+The `Move.toml` file is pre-configured with Sui framework dependencies. Now you'll add the journal smart contract code.
+
 ### Write Journal Contract
 
-Create [move/journal/sources/journal.move](move/journal/sources/journal.move) with the following structs and functions:
+Create a new file [move/journal/sources/journal.move](move/journal/sources/journal.move) with the following structs and functions:
 
 #### Structs
 
 **Journal** - An owned Sui object representing a journal
-- Abilities: ???
+- Abilities: key, store
 - Fields:
   - `id: UID`
   - `owner: address`
@@ -153,7 +189,7 @@ Create [move/journal/sources/journal.move](move/journal/sources/journal.move) wi
   - `entries: vector<Entry>`
 
 **Entry** - A struct representing a journal entry, to be stored in the `Journal` object. 
-- Abilities: ???
+- Abilities: store
 - Fields:
   - `content: String`
   - `create_at_ms: u64`
@@ -976,3 +1012,4 @@ pnpm build
 - [Sui Documentation](https://docs.sui.io)
 - [dApp Kit Documentation](https://sdk.mystenlabs.com/dapp-kit)
 - [Move Language Reference](https://docs.sui.io/concepts/sui-move-concepts)
+- [Discord Community](https://discord.gg/K79FVNcw55) - Get help and connect with other developers
