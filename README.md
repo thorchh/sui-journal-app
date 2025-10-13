@@ -1,61 +1,129 @@
 # Sui Journal App Workshop
 
-Build a decentralized journal application on Sui blockchain, starting from the counter example and progressively adding features.
+Learn Sui blockchain development by building a decentralized journal application. This hands-on workshop starts with deploying a simple counter contract to practice the fundamentals, then guides you through building a complete journal dApp with progressive feature additions.
+
+## Workshop Overview
+
+**What You'll Build:**
+- Phase 1: Deploy and test a counter smart contract (practice deployment workflow)
+- Phase 2: Build a journal dApp with create, read, and global discovery features
+
+**What You'll Learn:**
+- Deploying Move smart contracts to Sui testnet
+- Working with shared and owned objects
+- Building transactions and calling Move functions
+- Querying blockchain data with RPC and GraphQL
+- Integrating Sui wallet functionality in React apps
+
+## Prerequisites
+
+Before starting this workshop, make sure you have:
+
+- **Sui CLI installed and configured** - Follow the [Sui Getting Started Guide](https://docs.sui.io/guides/developer/getting-started)
+- **Node.js and pnpm** - For running the React application
+- **Basic TypeScript/React knowledge** - Familiarity with React components and hooks
+- **A code editor** - VS Code or your preferred editor
+
+## Getting Started
+
+Fork this repository and clone it to your local machine:
 
 ## Step 0: Counter Example
 
-**Goal:** Deploy and test the counter smart contract to understand basic Sui concepts.
+**Goal:** Deploy and test the counter smart contract to understand basic Sui deployment workflow and dApp interaction patterns.
 
-Follow the [counter template README instructions](https://github.com/MystenLabs/ts-sdks/tree/main/packages/create-dapp/templates/react-e2e-counter) to set up your environment, deploy the counter contract, and test the app.
+This repository includes a working counter contract in the `move/counter/` directory. You'll deploy this contract, connect it to the frontend, and test the complete application.
 
-**Key concepts:** Shared objects, Move functions, transaction building.
+### 1. Set Up Sui Testnet Environment
 
-### Optional: Enhanced User Experience
+If you haven't already, configure your Sui CLI for testnet:
 
-**Goal:** Add Slush web wallet support and easy faucet access for a better development experience.
+```bash
+# Add testnet environment
+sui client new-env --alias testnet --rpc https://fullnode.testnet.sui.io:443
 
-These optional features remove the need for browser extension wallets and simplify obtaining testnet SUI coins.
+# Switch to testnet
+sui client switch --env testnet
 
-#### Add Slush Wallet Support
+# Create a new wallet address (if you don't have one)
+sui client new-address secp256k1
 
-The Slush wallet enables users to sign in with Google authentication, eliminating the need for browser wallet extensions.
-
-Update [src/main.tsx](src/main.tsx) to add the `slushWallet` prop to `WalletProvider`:
-
-```tsx
-<WalletProvider autoConnect slushWallet={{ name: "Journal App" }}>
-  <App />
-</WalletProvider>
+# Switch to your address
+sui client switch --address YOUR_ADDRESS
 ```
 
-#### Add Faucet Button
+### 2. Deploy the Counter Contract
 
-Add a convenient button for users to obtain testnet SUI directly from the UI.
+Navigate to the Move package and publish it to testnet:
 
-Update [src/App.tsx](src/App.tsx) to add a faucet button in the header:
-
-```tsx
-<Box>
-  <Flex gap="2" align="center">
-    {currentAccount && (
-      <Button
-        variant="soft"
-        onClick={() => {
-          window.open(`https://faucet.sui.io/?address=${currentAccount.address}`, '_blank');
-        }}
-      >
-        Get Testnet SUI
-      </Button>
-    )}
-    <ConnectButton />
-  </Flex>
-</Box>
+```bash
+cd move/counter
+sui client publish --gas-budget 100000000
 ```
 
-**Benefits:**
-- Users can sign in with Google instead of installing wallet extensions
-- One-click access to testnet faucet with address pre-filled
-- Smoother onboarding for new users
+**Important:** Save the `packageId` from the publish output - you'll need it in the next step.
+
+Example output:
+```
+Created Object:
+  PackageID: 0x123abc...
+```
+
+### 3. Update Frontend Configuration
+
+Open [src/constants.ts](src/constants.ts) and update the counter package ID:
+
+```ts
+export const TESTNET_COUNTER_PACKAGE_ID = "0xYOUR_PACKAGE_ID_HERE";
+```
+
+### 4. Test the Counter App
+
+Install dependencies and start the development server:
+
+```bash
+# Return to project root
+cd ../..
+
+# Install dependencies
+pnpm install
+
+# Start development server
+pnpm dev
+```
+
+Open your browser to the local development URL (typically `http://localhost:5173`).
+
+**Testing Features:**
+
+1. **Connect Wallet** - Click "Connect Wallet" in the top right
+   - **No browser extension needed!** The app includes Slush web wallet - just sign in with Google
+
+2. **Get Testnet SUI** - Once connected, click the "Get Testnet SUI" button
+   - Opens the Sui faucet with your address pre-filled
+   - Request testnet tokens for gas fees
+
+3. **Create Counter** - Click to create a new shared counter object
+
+4. **Increment Counter** - Test incrementing the counter value
+
+5. **Explore Code (Optional)** - Review [src/Counter.tsx](src/Counter.tsx) and [src/CreateCounter.tsx](src/CreateCounter.tsx) to see how:
+   - Transactions are built with `@mysten/sui/transactions`
+   - Move functions are called from the frontend
+   - Shared objects are queried and updated
+
+**Key Concepts Learned:**
+- Deploying Move contracts to Sui testnet
+- Shared objects (accessible by anyone)
+- Building and executing transactions
+- Querying on-chain data
+- Connecting wallets to dApps
+
+---
+
+## Building the Journal App
+
+Now that you've practiced deploying contracts and interacting with shared objects through the counter example, you're ready to build the journal application. The journal will use **owned objects** (instead of shared objects) where each user controls their own journal, making it more private and gas-efficient for personal data.
 
 ---
 
