@@ -1,19 +1,16 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { Button, Container, TextField } from "@radix-ui/themes";
-import { useSignAndExecuteTransaction, useSuiClient, useCurrentAccount } from "@mysten/dapp-kit";
+import { Button, Container } from "@radix-ui/themes";
+import { useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
 import { useNetworkVariable } from "./networkConfig";
 import ClipLoader from "react-spinners/ClipLoader";
-import { useState } from "react";
 
-export function CreateJournal({
+export function CreateCounter({
   onCreated,
 }: {
   onCreated: (id: string) => void;
 }) {
-  const journalPackageId = useNetworkVariable("journalPackageId");
+  const counterPackageId = useNetworkVariable("counterPackageId");
   const suiClient = useSuiClient();
-  const currentAccount = useCurrentAccount();
-  const [title, setTitle] = useState("");
   const {
     mutate: signAndExecute,
     isSuccess,
@@ -21,16 +18,12 @@ export function CreateJournal({
   } = useSignAndExecuteTransaction();
 
   function create() {
-    if (!currentAccount) return;
-
     const tx = new Transaction();
 
-    const [journal] = tx.moveCall({
-      arguments: [tx.pure.string(title)],
-      target: `${journalPackageId}::journal::new_journal`,
+    tx.moveCall({
+      arguments: [],
+      target: `${counterPackageId}::counter::create`,
     });
-
-    tx.transferObjects([journal], currentAccount.address);
 
     signAndExecute(
       {
@@ -53,21 +46,14 @@ export function CreateJournal({
 
   return (
     <Container>
-      <TextField.Root
-        placeholder="Enter journal title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        size="3"
-        mb="3"
-      />
       <Button
         size="3"
         onClick={() => {
           create();
         }}
-        disabled={isSuccess || isPending || !title.trim()}
+        disabled={isSuccess || isPending}
       >
-        {isSuccess || isPending ? <ClipLoader size={20} /> : "Create Journal"}
+        {isSuccess || isPending ? <ClipLoader size={20} /> : "Create Counter"}
       </Button>
     </Container>
   );

@@ -1,15 +1,13 @@
 import { ConnectButton, useCurrentAccount } from "@mysten/dapp-kit";
 import { isValidSuiObjectId } from "@mysten/sui/utils";
-import { Box, Button, Container, Flex, Heading } from "@radix-ui/themes";
+import { Box, Container, Flex, Heading } from "@radix-ui/themes";
 import { useState } from "react";
-import { Journal } from "./Journal";
-import { CreateJournal } from "./CreateJournal";
-import { JournalList } from "./JournalList";
-import { JournalGallery } from "./JournalGallery";
+import { Counter } from "./Counter";
+import { CreateCounter } from "./CreateCounter";
 
 function App() {
   const currentAccount = useCurrentAccount();
-  const [journalId, setJournal] = useState(() => {
+  const [counterId, setCounter] = useState(() => {
     const hash = window.location.hash.slice(1);
     return isValidSuiObjectId(hash) ? hash : null;
   });
@@ -26,23 +24,11 @@ function App() {
         }}
       >
         <Box>
-          <Heading>Journal App</Heading>
+          <Heading>dApp Starter Template</Heading>
         </Box>
 
         <Box>
-          <Flex gap="2" align="center">
-            {currentAccount && (
-              <Button
-                variant="soft"
-                onClick={() => {
-                  window.open(`https://faucet.sui.io/?address=${currentAccount.address}`, '_blank');
-                }}
-              >
-                Get Testnet SUI
-              </Button>
-            )}
-            <ConnectButton />
-          </Flex>
+          <ConnectButton />
         </Box>
       </Flex>
       <Container>
@@ -53,35 +39,15 @@ function App() {
           style={{ background: "var(--gray-a2)", minHeight: 500 }}
         >
           {currentAccount ? (
-            journalId ? (
-              <Journal
-                id={journalId}
-                onBack={() => {
-                  window.location.hash = "";
-                  setJournal(null);
+            counterId ? (
+              <Counter id={counterId} />
+            ) : (
+              <CreateCounter
+                onCreated={(id) => {
+                  window.location.hash = id;
+                  setCounter(id);
                 }}
               />
-            ) : (
-              <Flex direction="column" gap="6">
-                <CreateJournal
-                  onCreated={(id) => {
-                    window.location.hash = id;
-                    setJournal(id);
-                  }}
-                />
-                <JournalList
-                  onSelectJournal={(id) => {
-                    window.location.hash = id;
-                    setJournal(id);
-                  }}
-                />
-                <JournalGallery
-                  onSelectJournal={(id) => {
-                    window.location.hash = id;
-                    setJournal(id);
-                  }}
-                />
-              </Flex>
             )
           ) : (
             <Heading>Please connect your wallet</Heading>
