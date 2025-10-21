@@ -4,6 +4,7 @@ import {
   TESTNET_COUNTER_PACKAGE_ID,
   MAINNET_COUNTER_PACKAGE_ID,
 } from "./constants.ts";
+import { TESTNET_JOURNAL_PACKAGE_ID } from "./constants.ts";
 import { createNetworkConfig } from "@mysten/dapp-kit";
 
 const { networkConfig, useNetworkVariable, useNetworkVariables } =
@@ -18,6 +19,8 @@ const { networkConfig, useNetworkVariable, useNetworkVariables } =
       url: getFullnodeUrl("testnet"),
       variables: {
         counterPackageId: TESTNET_COUNTER_PACKAGE_ID,
+        journalPackageId: TESTNET_JOURNAL_PACKAGE_ID,
+        graphqlUrl: "https://graphql.testnet.sui.io/graphql",
       },
     },
     mainnet: {
